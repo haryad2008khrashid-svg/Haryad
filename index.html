@@ -2,128 +2,127 @@
 <html lang="ku" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Khalid Haryad</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-/* ڕێگری کردن لە سکڕۆڵ و جوڵانی شاشە */
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden; /* ڕێگری لە سکڕۆڵ */
-    position: fixed; /* بۆ ئەوەی لە مۆبایل نەجوڵێت */
-}
-
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #000;
-    color: white;
+/* ڕێکخستنی سەرەکی بۆ ڕێگەدان بە سکڕۆڵ */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
     font-family: Arial, sans-serif;
 }
 
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* ناوەڕاست کردن */
+    background: #000;
+    color: white;
+    overflow-y: auto; /* ڕێگەدان بە سکڕۆڵی ستوونی */
+    padding: 40px 0; /* مەودا بۆ سەرەوە و خوارەوە لە کاتی سکڕۆڵ */
+}
+
 /* باکگراوەندە جوڵاوەکە */
-body::before {
-    content: "";
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
+body::before{
+    content:"";
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: radial-gradient(circle, #0ff, #000, #f0f, #000);
     animation: bgmove 20s linear infinite;
     opacity: 0.2;
     z-index: -1;
 }
 
-@keyframes bgmove {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+@keyframes bgmove{
+    0%{transform: scale(1) rotate(0deg)}
+    50%{transform: scale(1.2) rotate(180deg)}
+    100%{transform: scale(1) rotate(360deg)}
 }
 
-.container {
+.container{
+    position:relative;
     width: 90%;
-    max-width: 350px;
-    text-align: center;
+    max-width: 400px;
+    text-align:center;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
 /* پڕۆفایل */
-.avatar {
-    width: 100px;
-    height: 100px;
+.avatar{
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #0ff;
-    box-shadow: 0 0 15px #0ff;
-    margin: 0 auto;
+    border: 4px solid #0ff;
+    box-shadow: 0 0 20px #0ff;
     animation: glow 2s infinite alternate;
 }
 
-@keyframes glow {
-    from { box-shadow: 0 0 10px #0ff; }
-    to { box-shadow: 0 0 25px #0ff, 0 0 40px #0ff; }
+@keyframes glow{
+    from{box-shadow: 0 0 10px #0ff}
+    to{box-shadow: 0 0 30px #0ff, 0 0 50px #0ff}
 }
 
-h1 {
-    font-size: 22px;
-    margin-top: 10px;
-    margin-bottom: 2px;
+h1{
+    margin-top: 20px;
+    font-size: 26px;
+    letter-spacing: 1px;
 }
 
-.followers {
-    font-size: 13px;
-    margin-bottom: 15px;
-    opacity: 0.8;
+.followers{
+    margin-bottom: 30px;
+    font-size: 14px;
+    background: rgba(0, 255, 255, 0.1);
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 255, 0.3);
 }
 
-/* لینکەکان - قەبارەکەیان بۆ مۆبایل ڕیکخراوە */
-.links {
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* مەودای نێوان دوگمەکان کەمکراوەتەوە */
+/* لینکەکان */
+.links{
+    display:flex;
+    flex-direction:column;
+    gap: 15px;
 }
 
-.link {
-    padding: 10px;
-    border-radius: 10px;
+.link{
+    padding: 16px;
+    border-radius: 15px;
     text-decoration: none;
     color: white;
-    border: 1.5px solid #0ff;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px);
+    border: 2px solid #0ff;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
     font-weight: bold;
-    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    transition: 0.3s;
+    gap: 12px;
 }
 
-.link:active {
+.link:hover, .link:active {
     background: #0ff;
     color: black;
-    transform: scale(0.95);
+    transform: scale(1.03);
+    box-shadow: 0 0 25px #0ff;
 }
 
-/* ئایکۆنی مۆسیقا */
-#music-icon {
-    position: fixed;
-    bottom: 15px;
-    left: 15px;
-    color: #0ff;
-    font-size: 18px;
-    opacity: 0.6;
+/* نیشانەی مۆسیقا لە خوارەوە */
+.music-status {
+    margin-top: 30px;
+    font-size: 12px;
+    opacity: 0.5;
 }
 </style>
 </head>
@@ -148,27 +147,27 @@ h1 {
         <a href="https://www.instagram.com/khalidharyad" class="link"><i class="fab fa-instagram"></i> Instagram</a>
         <a href="https://www.facebook.com/share/1HqXb7FjLb/" class="link"><i class="fab fa-facebook"></i> Facebook</a>
     </div>
-</div>
 
-<div id="music-icon"><i class="fas fa-music"></i></div>
+    <div class="music-status">
+        <i class="fas fa-music"></i> مۆسیقا کار دەکات
+    </div>
+</div>
 
 <audio id="bgMusic" loop>
     <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-    // لێدانی مۆسیقا بە یەکەم کلیک لە هەرشوێنێکی شاشە
-    document.body.addEventListener('click', function() {
+    // لێدانی مۆسیقا بە یەکەم کلیک یان یەکەم دەست لێدان (Touch)
+    function playMusic() {
         var audio = document.getElementById("bgMusic");
         if (audio.paused) {
             audio.play();
         }
-    }, { once: true });
+    }
 
-    // ڕێگری تەواو لەوەی شاشەکە بجوڵێت کاتێک دەستی پیا دەهێنیت
-    document.addEventListener('touchmove', function(e) {
-        e.preventDefault();
-    }, { passive: false });
+    document.body.addEventListener('click', playMusic, { once: true });
+    document.body.addEventListener('touchstart', playMusic, { once: true });
 </script>
 
 </body>
