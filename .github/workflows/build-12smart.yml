@@ -17,19 +17,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Locate Android SDK and install API 35
+      - name: Check preinstalled Android SDK
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
-          SDKMANAGER="$(command -v sdkmanager || true)"
-          if [ -z "$SDKMANAGER" ]; then SDKMANAGER="$(find "$ANDROID_HOME" -type f -name sdkmanager 2>/dev/null | head -n1)"; fi
-          echo "SDKMANAGER=$SDKMANAGER"
-          if [ -n "$SDKMANAGER" ]; then
-            yes | "$SDKMANAGER" --licenses >/dev/null || true
-            "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
-          else
-            echo "No sdkmanager found; using preinstalled Android packages."
-            find "$ANDROID_HOME" -maxdepth 2 -type d | sort | head -80
-          fi
+          ls "$ANDROID_HOME/platforms" | tail -20
+          ls "$ANDROID_HOME/build-tools" | tail -20
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
