@@ -2,6 +2,8 @@ name: Build 12 Smart APK
 on:
   push:
     branches: ["12-smart-build"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 jobs:
   build:
