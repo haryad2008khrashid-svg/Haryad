@@ -1,0 +1,85 @@
+name: Build Pharmacy Sync Apps
+
+on:
+  push:
+    branches:
+      - build-pharmacy-sync-20260925
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore source
+        shell: bash
+        run: |
+          cat builder/source.part* | base64 -d > source.zip
+          mkdir -p src
+          unzip -q source.zip -d src
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build Android APK
+        working-directory: src/android
+        run: gradle assembleDebug --no-daemon
+
+      - name: Prepare APK
+        run: cp src/android/app/build/outputs/apk/debug/app-debug.apk PharmacySync-Android.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PharmacySync-Android
+          path: PharmacySync-Android.apk
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore source
+        shell: pwsh
+        run: |
+          $parts = Get-ChildItem "builder/source.part*" | Sort-Object Name
+          $b64 = ($parts | ForEach-Object { Get-Content $_.FullName -Raw }) -join ""
+          [IO.File]::WriteAllBytes("source.zip", [Convert]::FromBase64String($b64))
+          New-Item -ItemType Directory -Force -Path src | Out-Null
+          Expand-Archive -Path source.zip -DestinationPath src
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build Windows app
+        shell: pwsh
+        run: |
+          dotnet publish src/windows/PharmacySync.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o publish
+          @"
+          Pharmacy Sync - Windows
+
+          1) PharmacySync.exe بکەرەوە.
+          2) ئەگەر Windows Firewall پرسی، Allow بکە.
+          3) مۆبایل و کۆمپیوتەر لە هەمان Wi-Fi بن.
+          4) Pharmacy Sync لە مۆبایل بکەرەوە؛ خۆکارانە پەیوەست دەبێت.
+          "@ | Set-Content -Encoding UTF8 publish/README.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PharmacySync-Windows
+          path: publish/
